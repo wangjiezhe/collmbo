@@ -1,8 +1,12 @@
 FROM python:3.13.2-slim-bookworm AS builder
 ARG USE_BEDROCK=false
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends git && \
+    rm -rf /var/lib/apt/lists/*
+
 COPY requirements.txt /build/
 WORKDIR /build/
-RUN apk add git
 RUN pip install --no-cache-dir -U pip
 RUN if [ "$USE_BEDROCK" = "true" ]; then \
         echo boto3 >> requirements.txt; \
